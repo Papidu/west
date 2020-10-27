@@ -27,30 +27,64 @@ function getCreatureDescription(card) {
     return 'Существо';
 }
 
-
-
-// Основа для утки.
-function Duck() {
-    this.quacks = function () { console.log('quack') };
-    this.swims = function () { console.log('float: both;') };
+class Creature extends Card {
+    getDescriptions(){
+        let arr = [];
+        arr.unshift(super.getDescriptions());
+        arr.unshift(getCreatureDescription(this));
+        return arr;
+    }
 }
 
+class Duck extends Creature {
+    constructor(name='Мирная утка', maxPower=2) {
+        super(name, maxPower)
+        this.name = name;
+        this.maxPower = maxPower;
+    }
 
-// Основа для собаки.
-function Dog() {
+    quacks() {
+        console.log('quack');
+    }
+
+    swims() {
+        console.log('float: both;');
+    }
+}
+
+class Dog extends Creature {
+    constructor(name='Пес-бандит', maxPower=3) {
+        super(name, maxPower)
+        this.name = name;
+        this.maxPower = maxPower;
+    }
+}
+
+class Trasher extends Dog{
+    constructor(name='Громила', maxPower=5){
+        super(name, maxPower)
+        this.name = name;
+        this.maxPower = maxPower;
+
+    }
+    
+    modifyTakenDamage(value, fromCard, gameContext, continuation){
+        this.view.signalAbility(() => { continuation(value-1); })
+    }
+
 }
 
 
 // Колода Шерифа, нижнего игрока.
 const seriffStartDeck = [
-    new Card('Мирный житель', 2),
-    new Card('Мирный житель', 2),
-    new Card('Мирный житель', 2),
+    new Duck(),
+    new Duck(),
+    new Duck(),
 ];
 
 // Колода Бандита, верхнего игрока.
 const banditStartDeck = [
-    new Card('Бандит', 3),
+    new Trasher(),
 ];
 
 
